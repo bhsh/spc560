@@ -170,7 +170,6 @@ LIBS      = $(DLIBS) $(ULIBS)
 MCFLAGS   = -mcpu=$(MCU)
 ODFLAGS	  = -x --syms
 ASFLAGS   = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.s=.lst)) $(ADEFS)
-#ASXFLAGS  = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.S=.lst)) $(ADEFS)
 CFLAGS    = $(MCFLAGS) $(OPT) $(COPT) $(CWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.c=.lst)) $(DEFS)
 LDFLAGS   = $(MCFLAGS) $(OPT) -nostartfiles $(LLIBDIR) -Wl,-Map=$(BUILDDIR)/$(PROJECT).map,--cref,--no-warn-mismatch,--library-path=$(RULESPATH),$(LDOPT),--script=$(LDSCRIPT)
 
@@ -180,7 +179,6 @@ CFLAGS   += -MD -MP -MF .dep/$(@F).d
 
 # Paths where to search for sources
 VPATH     = $(SRCPATHS)
-
 #
 # Makefile rules
 #
@@ -204,10 +202,6 @@ $(COBJS) : $(OBJDIR)/%.o : %.c Makefile
 $(ASMOBJS) : $(OBJDIR)/%.o : %.s Makefile
 	@echo Compiling $(<F)
 	@$(AS) -c $(ASFLAGS) -I. $(IINCDIR) $< -o $@
-	
-#$(ASMXOBJS) : $(OBJDIR)/%.o : %.S Makefile
-#	@echo Compiling $(<F)
-#	@$(CC) -c $(ASXFLAGS) -I. $(IINCDIR) $< -o $@
 
 %.elf: $(OBJS) $(LDSCRIPT)
 	@echo Linking $@
