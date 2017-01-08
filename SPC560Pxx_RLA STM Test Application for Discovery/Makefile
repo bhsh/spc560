@@ -35,11 +35,6 @@ ifeq ($(USE_VLE),)
   USE_VLE = yes
 endif
 
-# Enable this if you want to see the full log while compiling.
-#ifeq ($(USE_VERBOSE_COMPILE),)
-#  USE_VERBOSE_COMPILE = no
-#endif
-
 #
 # Build global options
 ##############################################################################
@@ -123,18 +118,9 @@ BIN  = $(CP) -O binary
 # Define C warning options here
 CWARN = -Wall -Wextra -Wstrict-prototypes
 
-# Define C++ warning options here
-# CPPWARN = -Wall -Wextra
-
-#
-# Compiler settings
-##############################################################################
-
 #include .\components\spc560pxx_platform_component_rla/lib/rsc/rules.mk
 ##############################################################################
 # Processing options coming from the upper Makefile.
-#
-
 # Compiler options
 OPT = $(USE_OPT)
 COPT = $(USE_COPT)
@@ -212,13 +198,11 @@ ODFLAGS	  = -x --syms
 ASFLAGS   = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.s=.lst)) $(ADEFS)
 ASXFLAGS  = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.S=.lst)) $(ADEFS)
 CFLAGS    = $(MCFLAGS) $(OPT) $(COPT) $(CWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.c=.lst)) $(DEFS)
-#CPPFLAGS  = $(MCFLAGS) $(OPT) $(CPPOPT) $(CPPWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.cpp=.lst)) $(DEFS)
 LDFLAGS   = $(MCFLAGS) $(OPT) -nostartfiles $(LLIBDIR) -Wl,-Map=$(BUILDDIR)/$(PROJECT).map,--cref,--no-warn-mismatch,--library-path=$(RULESPATH),$(LDOPT),--script=$(LDSCRIPT)
 
 # Generate dependency information
 ASFLAGS  += -MD -MP -MF .dep/$(@F).d
 CFLAGS   += -MD -MP -MF .dep/$(@F).d
-#CPPFLAGS += -MD -MP -MF .dep/$(@F).d
 
 # Paths where to search for sources
 VPATH     = $(SRCPATHS)
@@ -226,101 +210,56 @@ VPATH     = $(SRCPATHS)
 #
 # Makefile rules
 #
-#all: $(OBJS) $(OUTFILES) MAKE_ALL_RULE_HOOK
 all: $(OBJS) $(OUTFILES)
 #all: $(OBJS)
-
-#MAKE_ALL_RULE_HOOK:
 
 $(OBJS): | $(BUILDDIR)
 
 $(BUILDDIR) $(OBJDIR) $(LSTDIR):
-#ifneq ($(USE_VERBOSE_COMPILE),yes)
 	@echo Compiler Options
 	@echo $(CC) -c $(CFLAGS) -I. $(IINCDIR) main.c -o main.o
-#	@echo
-#endif
 	mkdir .\build
 	mkdir .\build\obj
 	mkdir .\build\lst
 	
 $(COBJS) : $(OBJDIR)/%.o : %.c Makefile
-#ifeq ($(USE_VERBOSE_COMPILE),yes)
-#	@echo
-#	$(CC) -c $(CFLAGS) -I. $(IINCDIR) $< -o $@
-#else
 	@echo Compiling $(<F)
 	@$(CC) -c $(CFLAGS) -I. $(IINCDIR) $< -o $@
-#endif
 
 $(ASMOBJS) : $(OBJDIR)/%.o : %.s Makefile
-#ifeq ($(USE_VERBOSE_COMPILE),yes)
-#	@echo
-#	$(AS) -c $(ASFLAGS) -I. $(IINCDIR) $< -o $@
-#else
 	@echo Compiling $(<F)
 	@$(AS) -c $(ASFLAGS) -I. $(IINCDIR) $< -o $@
-#endif
-
+	
 $(ASMXOBJS) : $(OBJDIR)/%.o : %.S Makefile
-#ifeq ($(USE_VERBOSE_COMPILE),yes)
-#	@echo
-#	$(CC) -c $(ASXFLAGS) -I. $(IINCDIR) $< -o $@
-#else
 	@echo Compiling $(<F)
 	@$(CC) -c $(ASXFLAGS) -I. $(IINCDIR) $< -o $@
-#endif
 
 %.elf: $(OBJS) $(LDSCRIPT)
-#ifeq ($(USE_VERBOSE_COMPILE),yes)
-#	@echo
-#	$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $@
-#else
 	@echo Linking $@
 	@$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $@
-#endif
 
 %.hex: %.elf $(LDSCRIPT)
-#ifeq ($(USE_VERBOSE_COMPILE),yes)
-#	$(HEX) $< $@
-#else
 	@echo Creating $@
 	@$(HEX) $< $@
-#endif
 
 %.mot: %.elf $(LDSCRIPT)
-#ifeq ($(USE_VERBOSE_COMPILE),yes)
-#	$(MOT) $< $@
-#else
 	@echo Creating $@
 	@$(MOT) $< $@
-#endif
 
 %.bin: %.elf $(LDSCRIPT)
-#ifeq ($(USE_VERBOSE_COMPILE),yes)
-#	$(BIN) $< $@
-#else
 	@echo Creating $@
 	@$(BIN) $< $@
-#endif
 
 %.dmp: %.elf $(LDSCRIPT)
-#ifeq ($(USE_VERBOSE_COMPILE),yes)
-#	$(OD) $(ODFLAGS) $< > $@
-#else
 	@echo Creating $@
 	@$(OD) $(ODFLAGS) $< > $@
-#	@echo
 	@$(SZ) $<
-#	@echo
 	@echo Done
-#endif
 
 clean:
 	@echo Cleaning
 	-rm -fR .dep $(BUILDDIR)
 	@echo Done
-#	@echo Done
 
 # Include the dependency files, should be the last of the makefile
 #
