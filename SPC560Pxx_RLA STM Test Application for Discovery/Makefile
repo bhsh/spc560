@@ -123,7 +123,7 @@ $(BUILDDIR) $(OBJDIR) $(DEPDIR):
 	mkdir .\build
 	mkdir .\build\obj
 	mkdir .\build\dep
-#	@echo $(LLIBDIR)
+#	@echo $(RULESPATH)
 	
 $(COBJS) : $(OBJDIR)/%.o : %.c 
 	@echo Compiling $(<F)
