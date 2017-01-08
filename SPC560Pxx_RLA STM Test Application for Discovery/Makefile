@@ -123,8 +123,9 @@ $(BUILDDIR) $(OBJDIR) $(DEPDIR):
 	mkdir .\build
 	mkdir .\build\obj
 	mkdir .\build\dep
+#	@echo $(LLIBDIR)
 	
-$(COBJS) : $(OBJDIR)/%.o : %.c Makefile
+$(COBJS) : $(OBJDIR)/%.o : %.c 
 	@echo Compiling $(<F)
 	@$(CC) -c $(CFLAGS) -I. $(IINCDIR) $< -o $@
 
