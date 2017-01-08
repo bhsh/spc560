@@ -39,7 +39,7 @@ INCDIR =    $(LIB_INCLUDES) \
 # Compiler settings
 #
 MCU  = e200z0 -meabi -msdata=none -mregnames
-TRGT = C:\SPC5Studio\eclipse\plugins\com.st.tools.spc5.tools.gnu.gcc.ppcvle.win32_1.0.0.201607211420\toolchain\bin\ppc-freevle-eabi-
+TRGT = E:\ECU\SPC_ECU\project_dir\K12\02_ScriptTool\02_FreeGcc\bin\ppc-freevle-eabi-
 CC   = $(TRGT)gcc
 LD   = $(TRGT)gcc
 CP   = $(TRGT)objcopy
