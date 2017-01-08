@@ -77,7 +77,6 @@ SRCPATHS  = $(sort $(dir $(ASMXSRC)) $(dir $(ASMSRC)) $(dir $(SRC)))
 
 # Various directories
 OBJDIR    = $(BUILDDIR)/obj
-#LSTDIR    = $(BUILDDIR)/lst
 LSTDIR    = $(OBJDIR)
 DEPDIR    = $(BUILDDIR)/dep
 
