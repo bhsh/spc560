@@ -36,9 +36,9 @@ ifeq ($(USE_VLE),)
 endif
 
 # Enable this if you want to see the full log while compiling.
-ifeq ($(USE_VERBOSE_COMPILE),)
-  USE_VERBOSE_COMPILE = no
-endif
+#ifeq ($(USE_VERBOSE_COMPILE),)
+#  USE_VERBOSE_COMPILE = no
+#endif
 
 #
 # Build global options
@@ -230,91 +230,91 @@ VPATH     = $(SRCPATHS)
 all: $(OBJS) $(OUTFILES)
 #all: $(OBJS)
 
-MAKE_ALL_RULE_HOOK:
+#MAKE_ALL_RULE_HOOK:
 
 $(OBJS): | $(BUILDDIR)
 
 $(BUILDDIR) $(OBJDIR) $(LSTDIR):
-ifneq ($(USE_VERBOSE_COMPILE),yes)
+#ifneq ($(USE_VERBOSE_COMPILE),yes)
 	@echo Compiler Options
 	@echo $(CC) -c $(CFLAGS) -I. $(IINCDIR) main.c -o main.o
 #	@echo
-endif
+#endif
 	mkdir .\build
 	mkdir .\build\obj
 	mkdir .\build\lst
 	
 $(COBJS) : $(OBJDIR)/%.o : %.c Makefile
-ifeq ($(USE_VERBOSE_COMPILE),yes)
-	@echo
-	$(CC) -c $(CFLAGS) -I. $(IINCDIR) $< -o $@
-else
+#ifeq ($(USE_VERBOSE_COMPILE),yes)
+#	@echo
+#	$(CC) -c $(CFLAGS) -I. $(IINCDIR) $< -o $@
+#else
 	@echo Compiling $(<F)
 	@$(CC) -c $(CFLAGS) -I. $(IINCDIR) $< -o $@
-endif
+#endif
 
 $(ASMOBJS) : $(OBJDIR)/%.o : %.s Makefile
-ifeq ($(USE_VERBOSE_COMPILE),yes)
-	@echo
-	$(AS) -c $(ASFLAGS) -I. $(IINCDIR) $< -o $@
-else
+#ifeq ($(USE_VERBOSE_COMPILE),yes)
+#	@echo
+#	$(AS) -c $(ASFLAGS) -I. $(IINCDIR) $< -o $@
+#else
 	@echo Compiling $(<F)
 	@$(AS) -c $(ASFLAGS) -I. $(IINCDIR) $< -o $@
-endif
+#endif
 
 $(ASMXOBJS) : $(OBJDIR)/%.o : %.S Makefile
-ifeq ($(USE_VERBOSE_COMPILE),yes)
-	@echo
-	$(CC) -c $(ASXFLAGS) -I. $(IINCDIR) $< -o $@
-else
+#ifeq ($(USE_VERBOSE_COMPILE),yes)
+#	@echo
+#	$(CC) -c $(ASXFLAGS) -I. $(IINCDIR) $< -o $@
+#else
 	@echo Compiling $(<F)
 	@$(CC) -c $(ASXFLAGS) -I. $(IINCDIR) $< -o $@
-endif
+#endif
 
 %.elf: $(OBJS) $(LDSCRIPT)
-ifeq ($(USE_VERBOSE_COMPILE),yes)
-	@echo
-	$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $@
-else
+#ifeq ($(USE_VERBOSE_COMPILE),yes)
+#	@echo
+#	$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $@
+#else
 	@echo Linking $@
 	@$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $@
-endif
+#endif
 
 %.hex: %.elf $(LDSCRIPT)
-ifeq ($(USE_VERBOSE_COMPILE),yes)
-	$(HEX) $< $@
-else
+#ifeq ($(USE_VERBOSE_COMPILE),yes)
+#	$(HEX) $< $@
+#else
 	@echo Creating $@
 	@$(HEX) $< $@
-endif
+#endif
 
 %.mot: %.elf $(LDSCRIPT)
-ifeq ($(USE_VERBOSE_COMPILE),yes)
-	$(MOT) $< $@
-else
+#ifeq ($(USE_VERBOSE_COMPILE),yes)
+#	$(MOT) $< $@
+#else
 	@echo Creating $@
 	@$(MOT) $< $@
-endif
+#endif
 
 %.bin: %.elf $(LDSCRIPT)
-ifeq ($(USE_VERBOSE_COMPILE),yes)
-	$(BIN) $< $@
-else
+#ifeq ($(USE_VERBOSE_COMPILE),yes)
+#	$(BIN) $< $@
+#else
 	@echo Creating $@
 	@$(BIN) $< $@
-endif
+#endif
 
 %.dmp: %.elf $(LDSCRIPT)
-ifeq ($(USE_VERBOSE_COMPILE),yes)
-	$(OD) $(ODFLAGS) $< > $@
-else
+#ifeq ($(USE_VERBOSE_COMPILE),yes)
+#	$(OD) $(ODFLAGS) $< > $@
+#else
 	@echo Creating $@
 	@$(OD) $(ODFLAGS) $< > $@
 #	@echo
 	@$(SZ) $<
 #	@echo
 	@echo Done
-endif
+#endif
 
 clean:
 	@echo Cleaning
