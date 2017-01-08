@@ -243,16 +243,7 @@ endif
 	mkdir .\build
 	mkdir .\build\obj
 	mkdir .\build\lst
-
-#$(CPPOBJS) : $(OBJDIR)/%.o : %.cpp Makefile
-#ifeq ($(USE_VERBOSE_COMPILE),yes)
-#	@echo
-#	$(CPPC) -c $(CPPFLAGS) -I. $(IINCDIR) $< -o $@
-#else
-#	@echo Compiling $(<F)
-#	@$(CPPC) -c $(CPPFLAGS) -I. $(IINCDIR) $< -o $@
-#endif
-
+	
 $(COBJS) : $(OBJDIR)/%.o : %.c Makefile
 ifeq ($(USE_VERBOSE_COMPILE),yes)
 	@echo
@@ -331,52 +322,9 @@ clean:
 	@echo Done
 #	@echo Done
 
-# lint-nt must be accessible from your PATH
-#LINT_TOOL = lint-nt
-#LINT_OPTIONS = pclint/co-gcc.lnt pclint/au-misra3.lnt pclint/waivers.lnt
-
-#define AWK_CMD =
-#/search starts/{inc=1; next}/End of search list./{inc=0; next}{if (inc>0) { a = $$1; printf(gensub(/(.*)$$/, "--i\\\\1", "g", a)) }}
-#endef
-#define GET_INCLUDE_PATHS_CMD = 
-#$(shell $(TRGT)cpp -v 2>&1 | gawk '$(AWK_CMD)' > pclint/gcc-include-path.lnt)
-#endef
-
-#misra: pclint/gcc-include-path.lnt pclint/lint_cmac.h pclint/lint_cppmac.h
-#	@echo
-#	@echo Start MISRA Check...
-#	@echo ${LINT_TOOL} ${LINT_OPTIONS} $(subst \,/,$(IINCDIR)) $(subst \,/,$(SRC)) > misra.txt
-#	${LINT_TOOL} ${LINT_OPTIONS} $(subst \,/,$(IINCDIR)) $(subst \,/,$(SRC)) >> misra.txt
-#	@echo 
-#	@echo See results in misra.txt
-
-#.PHONY: pclint/gcc-include-path.lnt
-#pclint/gcc-include-path.lnt:
-#	@echo
-#	@echo Generate pclint/gcc-include-path.lnt for current compiler 
-#	@$(GET_INCLUDE_PATHS_CMD)
-
-#.PHONY: pclint/lint_cmac.h
-#pclint/lint_cmac.h:
-#	@echo
-#	@echo Generate pclint/lint_cmac.h for current compiler 
-#	@touch t.c 
-#	@$(TRGT)gcc -E -dM t.c > pclint/lint_cmac.h
-#	@rm t.c
-
-#.PHONY: pclint/lint_cppmac.h
-#pclint/lint_cppmac.h:
-#	@echo
-#	@echo Generate pclint/lint_cppmac.h for current compiler
-#	@touch t.cpp 
-#	@$(TRGT)g++ -E -dM t.cpp > pclint/lint_cppmac.h
-#	@rm t.cpp
-
-#
 # Include the dependency files, should be the last of the makefile
 #
 -include $(shell mkdir .dep 2>null) $(wildcard .dep/*)
-
 # *** EOF ***
 
 
