@@ -77,7 +77,9 @@ SRCPATHS  = $(sort $(dir $(ASMXSRC)) $(dir $(ASMSRC)) $(dir $(SRC)))
 
 # Various directories
 OBJDIR    = $(BUILDDIR)/obj
-LSTDIR    = $(BUILDDIR)/lst
+#LSTDIR    = $(BUILDDIR)/lst
+LSTDIR    = $(OBJDIR)
+DEPDIR    = $(BUILDDIR)/dep
 
 # Object files groups
 COBJS     = $(addprefix $(OBJDIR)/, $(notdir $(CSRC:.c=.o)))
@@ -103,8 +105,8 @@ CFLAGS    = $(MCFLAGS) $(OPT) $(CWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.c=.lst)
 LDFLAGS   = $(MCFLAGS) $(OPT) -nostartfiles $(LLIBDIR) -Wl,-Map=$(BUILDDIR)/$(PROJECT).map,--cref,--no-warn-mismatch,--library-path=$(RULESPATH),$(LDOPT),--script=$(LDSCRIPT)
 
 # Generate dependency information
-ASFLAGS  += -MD -MP -MF .dep/$(@F).d
-CFLAGS   += -MD -MP -MF .dep/$(@F).d
+ASFLAGS  += -MD -MP -MF $(DEPDIR)/$(@F).d
+CFLAGS   += -MD -MP -MF $(DEPDIR)/$(@F).d
 
 # Paths where to search for sources
 VPATH     = $(SRCPATHS)
@@ -116,13 +118,12 @@ all: $(OBJS) $(OUTFILES)
 
 $(OBJS): | $(BUILDDIR)
 
-$(BUILDDIR) $(OBJDIR) $(LSTDIR):
+$(BUILDDIR) $(OBJDIR) $(DEPDIR):
 	@echo Compiler Options
 	@echo $(CC) -c $(CFLAGS) -I. $(IINCDIR) main.c -o main.o
 	mkdir .\build
 	mkdir .\build\obj
-	mkdir .\build\lst
-	$(shell mkdir .dep 2>null)
+	mkdir .\build\dep
 	
 $(COBJS) : $(OBJDIR)/%.o : %.c Makefile
 	@echo Compiling $(<F)
@@ -156,7 +157,7 @@ $(ASMOBJS) : $(OBJDIR)/%.o : %.s Makefile
 
 clean:
 	@echo Cleaning
-	-rm -fR .dep $(BUILDDIR)
+	-rm -fR $(DEPDIR) $(BUILDDIR)
 	@echo Done
 
 # Include the dependency files, should be the last of the makefile
