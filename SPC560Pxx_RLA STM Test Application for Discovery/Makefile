@@ -10,16 +10,6 @@ ifeq ($(USE_OPT),)
   USE_OPT = -O2 -gdwarf-2 -fomit-frame-pointer -falign-functions=16 -mno-spe -msoft-float
 endif
 
-# C specific options here (added to USE_OPT).
-ifeq ($(USE_COPT),)
-  USE_COPT = 
-endif
-
-# C++ specific options here (added to USE_OPT).
-ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -fno-rtti -fno-exceptions
-endif
-
 # Enable this if you want the linker to remove unused code and data.
 ifeq ($(USE_LINK_GC),)
   USE_LINK_GC = yes
@@ -34,10 +24,6 @@ endif
 ifeq ($(USE_VLE),)
   USE_VLE = yes
 endif
-
-#
-# Build global options
-##############################################################################
 
 ##############################################################################
 # Project, sources and paths
@@ -99,8 +85,6 @@ CWARN = -Wall -Wextra -Wstrict-prototypes
 # Processing options coming from the upper Makefile.
 # Compiler options
 OPT = $(USE_OPT)
-COPT = $(USE_COPT)
-CPPOPT = $(USE_CPPOPT)
 # Garbage collection
 ifeq ($(USE_LINK_GC),yes)
   OPT += -ffunction-sections -fdata-sections -fno-common
@@ -170,7 +154,7 @@ LIBS      = $(DLIBS) $(ULIBS)
 MCFLAGS   = -mcpu=$(MCU)
 ODFLAGS	  = -x --syms
 ASFLAGS   = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.s=.lst)) $(ADEFS)
-CFLAGS    = $(MCFLAGS) $(OPT) $(COPT) $(CWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.c=.lst)) $(DEFS)
+CFLAGS    = $(MCFLAGS) $(OPT) $(CWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.c=.lst)) $(DEFS)
 LDFLAGS   = $(MCFLAGS) $(OPT) -nostartfiles $(LLIBDIR) -Wl,-Map=$(BUILDDIR)/$(PROJECT).map,--cref,--no-warn-mismatch,--library-path=$(RULESPATH),$(LDOPT),--script=$(LDSCRIPT)
 
 # Generate dependency information
