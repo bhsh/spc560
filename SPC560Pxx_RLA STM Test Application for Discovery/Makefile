@@ -72,7 +72,7 @@ OUTFILES = $(BUILDDIR)/$(PROJECT).elf $(BUILDDIR)/$(PROJECT).hex \
            $(BUILDDIR)/$(PROJECT).dmp
 
 # Source files groups and paths
-SRC	      = $(CSRC)$(CPPSRC)
+SRC	      = $(CSRC)
 SRCPATHS  = $(sort $(dir $(ASMXSRC)) $(dir $(ASMSRC)) $(dir $(SRC)))
 
 # Various directories
@@ -82,7 +82,7 @@ LSTDIR    = $(BUILDDIR)/lst
 # Object files groups
 COBJS     = $(addprefix $(OBJDIR)/, $(notdir $(CSRC:.c=.o)))
 ASMOBJS   = $(addprefix $(OBJDIR)/, $(notdir $(ASMSRC:.s=.o)))
-OBJS	  = $(ASMOBJS) $(COBJS) $(CPPOBJS)
+OBJS	  = $(ASMOBJS) $(COBJS)
 
 # Paths
 IINCDIR   = $(patsubst %,-I%,$(INCDIR) $(DINCDIR) $(UINCDIR))
