@@ -57,42 +57,21 @@ endif
 # Define linker script file here
 LDSCRIPT = application.ld
 
-# Source files located under ./source are automatically added.
-rwildcard = $(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
-AUTO_C_SRC = $(call rwildcard,./source/,*.c)
-AUTO_CPP_SRC = $(call rwildcard,./source/,*.cpp)
-AUTO_ASM_SRC = $(call rwildcard,./source/,*.s)
-AUTO_INCLUDES = $(sort $(dir $(call rwildcard,./source/,*)))
-
 # C sources here.
 CSRC =      $(LIB_C_SRC) \
             $(APP_C_SRC) \
             $(U_C_SRC) \
-            $(AUTO_C_SRC) \
             ./components/components.c
-
-# C++ sources here.
-CPPSRC =    $(LIB_CPP_SRC) \
-            $(APP_CPP_SRC) \
-            $(U_CPP_SRC) \
-            $(AUTO_CPP_SRC)
-
+			
 # List ASM source files here.
 ASMSRC =    $(LIB_ASM_SRC) \
             $(APP_ASM_SRC) \
-            $(U_ASM_SRC) \
-            $(AUTO_ASM_SRC)
+            $(U_ASM_SRC)
 
 # Inclusion paths.
 INCDIR =    $(LIB_INCLUDES) \
             $(APP_INCLUDES) \
-            $(AUTO_INCLUDES) \
             ./components
-
-#
-# Project, sources and paths
-##############################################################################
- 
 
 ##############################################################################
 # Compiler settings
@@ -101,12 +80,10 @@ MCU  = e200z0 -meabi -msdata=none -mregnames
 
 TRGT = C:\SPC5Studio\eclipse\plugins\com.st.tools.spc5.tools.gnu.gcc.ppcvle.win32_1.0.0.201607211420\toolchain\bin\ppc-freevle-eabi-
 CC   = $(TRGT)gcc
-CPPC = $(TRGT)g++
 # Enable loading with g++ only if you need C++ runtime support.
 # NOTE: You can use C++ even without C++ support if you are careful. C++
 #       runtime support makes code size explode.
 LD   = $(TRGT)gcc
-#LD   = $(TRGT)g++
 CP   = $(TRGT)objcopy
 AS   = $(TRGT)gcc -x assembler-with-cpp
 OD   = $(TRGT)objdump
@@ -118,14 +95,12 @@ BIN  = $(CP) -O binary
 # Define C warning options here
 CWARN = -Wall -Wextra -Wstrict-prototypes
 
-#include .\components\spc560pxx_platform_component_rla/lib/rsc/rules.mk
 ##############################################################################
 # Processing options coming from the upper Makefile.
 # Compiler options
 OPT = $(USE_OPT)
 COPT = $(USE_COPT)
 CPPOPT = $(USE_CPPOPT)
-
 # Garbage collection
 ifeq ($(USE_LINK_GC),yes)
   OPT += -ffunction-sections -fdata-sections -fno-common
@@ -195,7 +170,7 @@ LIBS      = $(DLIBS) $(ULIBS)
 MCFLAGS   = -mcpu=$(MCU)
 ODFLAGS	  = -x --syms
 ASFLAGS   = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.s=.lst)) $(ADEFS)
-ASXFLAGS  = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.S=.lst)) $(ADEFS)
+#ASXFLAGS  = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.S=.lst)) $(ADEFS)
 CFLAGS    = $(MCFLAGS) $(OPT) $(COPT) $(CWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.c=.lst)) $(DEFS)
 LDFLAGS   = $(MCFLAGS) $(OPT) -nostartfiles $(LLIBDIR) -Wl,-Map=$(BUILDDIR)/$(PROJECT).map,--cref,--no-warn-mismatch,--library-path=$(RULESPATH),$(LDOPT),--script=$(LDSCRIPT)
 
@@ -220,6 +195,7 @@ $(BUILDDIR) $(OBJDIR) $(LSTDIR):
 	mkdir .\build
 	mkdir .\build\obj
 	mkdir .\build\lst
+	$(shell mkdir .dep 2>null)
 	
 $(COBJS) : $(OBJDIR)/%.o : %.c Makefile
 	@echo Compiling $(<F)
@@ -229,9 +205,9 @@ $(ASMOBJS) : $(OBJDIR)/%.o : %.s Makefile
 	@echo Compiling $(<F)
 	@$(AS) -c $(ASFLAGS) -I. $(IINCDIR) $< -o $@
 	
-$(ASMXOBJS) : $(OBJDIR)/%.o : %.S Makefile
-	@echo Compiling $(<F)
-	@$(CC) -c $(ASXFLAGS) -I. $(IINCDIR) $< -o $@
+#$(ASMXOBJS) : $(OBJDIR)/%.o : %.S Makefile
+#	@echo Compiling $(<F)
+#	@$(CC) -c $(ASXFLAGS) -I. $(IINCDIR) $< -o $@
 
 %.elf: $(OBJS) $(LDSCRIPT)
 	@echo Linking $@
@@ -262,7 +238,7 @@ clean:
 
 # Include the dependency files, should be the last of the makefile
 #
--include $(shell mkdir .dep 2>null) $(wildcard .dep/*)
+#-include $(shell mkdir .dep 2>null) $(wildcard .dep/*)
 # *** EOF ***
 
 
