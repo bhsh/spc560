@@ -1,1 +1,2 @@
-E:\WorkArea\K245ECU\01_Mak\make.exe clean
+make clean
+make -j4 all
