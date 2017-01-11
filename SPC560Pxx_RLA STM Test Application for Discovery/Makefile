@@ -133,11 +133,11 @@ $(ASMOBJS) : $(OBJDIR)/%.o : %.s Makefile
 	@echo Compiling $(<F)
 	@$(AS) -c $(ASFLAGS) -I. $(IINCDIR) $< -o $@
 
-%.elf: $(OBJS) $(LDSCRIPT)
+$(BUILDDIR)/$(PROJECT).elf : $(OBJS) $(LDSCRIPT)
 	@echo Linking $@
 	@$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $@
 
-%.hex: %.elf $(LDSCRIPT)
+$(BUILDDIR)/$(PROJECT).hex: $(BUILDDIR)/$(PROJECT).elf $(LDSCRIPT)
 	@echo Creating $@
 	@$(HEX) $< $@
 
